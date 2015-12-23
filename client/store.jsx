@@ -37,5 +37,7 @@ const finalCreateStore =
 // note, this is an optional step to use middleware (we're auto console.log dispatches)
 // let createStoreWithMiddleware = applyMiddleware(logger)(createStore);
 // store = createStoreWithMiddleware(rootReducer);
-// 
-store = finalCreateStore(rootReducer);
+//
+// store = finalCreateStore(rootReducer);
+
+store = createStore(rootReducer);

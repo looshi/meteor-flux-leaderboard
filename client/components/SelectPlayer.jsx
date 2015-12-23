@@ -1,18 +1,19 @@
-SelectPlayer = React.createClass({
-  propTypes: {
-    selectedName: React.PropTypes.string,
-    selectedId: React.PropTypes.string,
-  },
+class SelectPlayer extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
 
   handleClick() {
     store.dispatch(Actions.incrementScore(this.props.selectedId));
-  },
+  }
 
   render() {
     if (this.props.selectedPlayerName) {
       return (
         <div className="details">
-          <div className="name">{ this.props.selectedPlayerName }</div>
+          <div className="name">{this.props.selectedPlayerName}</div>
           <button className="inc" onClick={this.handleClick}>
             Add 5 points
           </button>
@@ -25,4 +26,11 @@ SelectPlayer = React.createClass({
       );
     }
   }
-});
+};
+
+SelectPlayer.propTypes = {
+  selectedName: React.PropTypes.string,
+  selectedId: React.PropTypes.string
+}
+
+this.SelectPlayer = SelectPlayer

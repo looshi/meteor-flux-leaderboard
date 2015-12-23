@@ -1,11 +1,4 @@
-/* jshint maxlen: false */
-
-App = React.createClass({
-  propTypes: {
-    players: React.PropTypes.array,
-    selectedId: React.PropTypes.string,
-    selectedName: React.PropTypes.string,
-  },
+class App extends React.Component {
 
   render() {
     console.log('[App] rendering');
@@ -23,4 +16,12 @@ App = React.createClass({
       </div>
     );
   }
-});
+}
+
+App.propTypes = {
+  players: React.PropTypes.array,
+  selectedId: React.PropTypes.string,
+  selectedName: React.PropTypes.string,
+}
+
+this.App = App;

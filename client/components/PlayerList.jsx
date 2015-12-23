@@ -1,8 +1,4 @@
-PlayerList = React.createClass({
-  propTypes: {
-    players: React.PropTypes.array.isRequired,
-    selectedId: React.PropTypes.string.isRequired
-  },
+class PlayerList extends React.Component {
 
   render() {
     if (!this.props.players.length) {
@@ -15,18 +11,26 @@ PlayerList = React.createClass({
     }
 
     return (
-     <ul className="leaderboard">
-       {
-         this.props.players.map((player) => {
-           return (
-             <PlayerItem
-               key={ player._id }
-               selectedPlayerId={ this.props.selectedId }
-               player={ player } />
-           );
-         })
-       }
-     </ul>
+      <ul className="leaderboard">
+        {
+          this.props.players.map((player) => {
+            return (
+              <PlayerItem
+                key={ player._id }
+                selectedPlayerId={ this.props.selectedId }
+                player={ player }
+              />
+            );
+          })
+        }
+      </ul>
     );
   }
-});
+};
+
+PlayerList.propTypes = {
+  players: React.PropTypes.array.isRequired,
+  selectedId: React.PropTypes.string.isRequired
+}
+
+this.PlayerList = PlayerList

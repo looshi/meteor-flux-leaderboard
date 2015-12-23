@@ -1,12 +1,14 @@
 Meteor.startup(function() {
-  React.render(
+  ReactDOM.render(
     <div>
       <Provider store={store}>
         { () => <AppContainer /> }
       </Provider>
-      <DebugPanel top right bottom>
-        <DevTools store={store} monitor={LogMonitor} />
-      </DebugPanel>
+      {/*<DebugPanel top right bottom>
+      <DevTools store={store} monitor={LogMonitor} />
+      </DebugPanel>*/}
     </div>,
     document.getElementById('app'));
 });
+
+
