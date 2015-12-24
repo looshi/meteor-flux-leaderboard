@@ -13,7 +13,6 @@ meteorhacks:npm
 npm-container
 cosmos:browserify
 promise
-skinnygeek1010:flux-helpers
 standard-minifiers
 meteor-base
 mobile-experience
