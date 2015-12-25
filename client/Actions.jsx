@@ -13,20 +13,26 @@ Actions.playersChanged = function playersChanged(newDocs) {
   };
 };
 
-
-// doesn't return payload because our collection watcher
-// will send a CHANGED action and update the store
 Actions.incrementScore = function incrementScore(playerId) {
-  Players.update({_id: playerId}, {$inc: {score: 5}});
-  // TODO call FAILED action on error
-  return { type: 'INCREMENT_SCORE' };
+  Meteor.call('players.increment-score', playerId, function(err, res) {
+    if(res){
+      store.dispatch(Actions.fetchPlayers());
+    }
+  });
+  return {
+    type: 'INCREMENT_SCORE',
+    playerId: playerId
+  };
 };
 
+Actions.fetchPlayers = function() {
+  Meteor.call('players.fetch', function(err, res) {
+    store.dispatch(Actions.playersChanged(res));
+  });
+  return { type: 'FETCH_PLAYERS' };
+};
 
-Actions.selectPlayer = function selectPlayer(playerId) {
-  let player = Players.findOne(playerId);
-  let playerName = player.name || "N/A";
-
+Actions.selectPlayer = function selectPlayer(playerId, playerName) {
   return {
     type: 'SELECT_PLAYER',
     playerId: playerId,

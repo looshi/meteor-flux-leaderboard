@@ -26,6 +26,7 @@ Reducers.userInterface = function userInterface(state, action) {
 
   switch (action.type) {
     case 'SELECT_PLAYER':
+      console.log('SELECT_PLAYER', action);
       // we happen to be replacing all the reducers state but with merge you
       // could just return the selectedId and it would retain selectedPlayerName
       return merge(state, {
@@ -42,17 +43,19 @@ Reducers.userInterface = function userInterface(state, action) {
 Reducers.players = function players(state = [], action) {
   switch (action.type) {
     case 'INCREMENT_SCORE':
-      // normally in redux you would update and merge state here but
-      // since have minimongo to do that for us we'll just wait for the
-      // flux-helper to fire a COLLECTION_CHANGED dispatch after the
-      // increment update. Since we're doing that we'll just return the old
-      // state to prevent the UI from re-rendering twice.
-      return state;
+
+      // Is this optimistic UI update ?
+      // If the server update fails, this should be reverted.
+      console.log('INCREMENT_SCORE', action);
+      return state.map(player =>
+        player._id === action.playerId ?
+          Object.assign({}, player, { score: player.score + 5 }) :
+          player
+      )
     case 'PLAYERS_COLLECTION_CHANGED':
-      // we don't have to merge the single doc that changes since minimongo
-      // keeps the entire cache for us. We'll just return the new minimongo state
-      // We *could* also return another fetch if sorting wasn't so easy here
-      let docs = _.clone(action.collection); // clone to prevent mutating action!!
+      console.log('PLAYERS_COLLECTION_CHANGED', action);
+
+      let docs = _.clone(action.collection);
       return docs.sort((a,b) => b.score - a.score);
     default:
       return state;

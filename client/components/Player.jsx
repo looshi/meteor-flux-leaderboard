@@ -7,7 +7,8 @@ class PlayerItem extends React.Component {
 
   handleClick() {
     var playerId = this.props.player._id;
-    store.dispatch(Actions.selectPlayer(playerId));
+    var playerName = this.props.player.name;
+    store.dispatch(Actions.selectPlayer(playerId, playerName));
   }
 
   getClassName() {

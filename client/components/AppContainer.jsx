@@ -5,11 +5,10 @@
 class AppContainer extends React.Component {
 
   componentWillMount() {
-    this.sub = Meteor.subscribe('players');
+    store.dispatch(Actions.fetchPlayers());
   }
 
   componentWillUnmount() {
-    this.sub.stop();
   }
 
   render() {
