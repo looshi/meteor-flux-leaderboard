@@ -26,7 +26,8 @@ function mapStateToProps(state) {
   return {
     players: state.players,
     selectedId: state.userInterface.selectedId,
-    selectedPlayerName: state.userInterface.selectedPlayerName
+    selectedPlayerName: state.userInterface.selectedPlayerName,
+    errorMessage: state.userInterface.errorMessage
   };
 }
 

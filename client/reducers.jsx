@@ -10,7 +10,8 @@ Reducers = {};
 
 let initialInterfaceState = {
   selectedId: '',
-  selectedPlayerName: ''
+  selectedPlayerName: '',
+  errorMessage: ''
 }
 
 // helper to *copy* old state and merge new data with it
@@ -31,6 +32,10 @@ Reducers.userInterface = function userInterface(state, action) {
       return merge(state, {
         selectedId: action.playerId,
         selectedPlayerName: action.playerName
+      });
+    case 'PLAYER_UPDATE_FAILED':
+      return merge(state, {
+        errorMessage: 'Error saving score for ' + action.playerName
       });
     default:
       return state;

@@ -13,11 +13,13 @@ Actions.playersChanged = function playersChanged(newDocs) {
   };
 };
 
-Actions.incrementScore = function incrementScore(playerId) {
+Actions.incrementScore = function incrementScore(playerId, playerName) {
   Meteor.call('players.increment-score', playerId, function(err, res) {
     if(res){
       // Fetch the player who changed.
       store.dispatch(Actions.fetchPlayers(res));
+    }else{
+      store.dispatch(Actions.playerUpdateFailed(playerId, playerName));
     }
   });
   return {
@@ -25,6 +27,14 @@ Actions.incrementScore = function incrementScore(playerId) {
     playerId: playerId
   };
 };
+
+Actions.playerUpdateFailed = function playerUpdateFailed(playerId, playerName) {
+  return {
+    type: 'PLAYER_UPDATE_FAILED',
+    playerId: playerId,
+    playerName: playerName
+  };
+}
 
 Actions.fetchPlayers = function() {
   Meteor.call('players.fetch', function(err, res) {
@@ -40,3 +50,4 @@ Actions.selectPlayer = function selectPlayer(playerId, playerName) {
     playerName: playerName
   };
 };
+

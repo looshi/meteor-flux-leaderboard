@@ -149,6 +149,11 @@ body {
   text-align: center;
 }
 
+.error {
+  color: orange;
+  text-align: center;
+}
+
 @media (max-width: 500px) {
   .details, .message {
     display: block;
