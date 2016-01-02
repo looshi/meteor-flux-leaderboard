@@ -1,7 +1,9 @@
 # meteor-flux-leaderboard
 Flux Example with React &amp; Meteor
 
-## Redux Example
+## Redux Methods Example
+
+This example demonstrates how to use Redux with server methods, handle server update errors, and display optimistic UI.
 
 Please read the fantastic Redux guide before/after diving into this. At first it may seem very complex
 but it turns out to be very simple once you understand the reducer flow.
@@ -79,7 +81,7 @@ this.AppContainer = connect(mapStateToProps)(AppContainer);
 ### Useage
 
 - `cd meteor-flux-leaderboard`
-- `git checkout redux`
+- `git checkout redux-methods`
 - `meteor`
 - Open your browser to localhost:3000
 - Checkout action/store logs in console after clicking about
@@ -93,15 +95,3 @@ this.AppContainer = connect(mapStateToProps)(AppContainer);
 - [ ] Serverside rendering branch (started, shared files but no SSR)
 - [ ] Immutible stores for rendering performance
 - [ ] React Router using actions
-
-Key pieces are in CollectionActions/Store, Tracker watches for changes on the Minimongo clientside cache and emits a change event when data changes. This retains all the optimistic UI and realtime data capabilities that Meteor offers.
-
-```
- Tracker.autorun(computation => {
-    var docs = Players.find({}).fetch();
-
-    if (computation.firstRun) return; // ignore first empty run
-
-    this.CollectionActions.playersChanged(docs);
-  });
-```
