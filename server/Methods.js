@@ -1,13 +1,15 @@
 Meteor.methods({
 
-  'players.fetch': function(){
-    // Simulates a slows response by sleeping for 2 seconds.
+  'players.fetch': function(playerId){
+    // Simulates a slow response by sleeping for 1 second.
     Meteor._sleepForMs(1000);
-    return Players.find().fetch();
+    // Fetch a single player when playerId is given, else fetch all players.
+    var options = playerId || {};
+    return Players.find(options).fetch();
   },
 
   'players.increment-score': function(playerId){
-    // Simulates a slows response by sleeping for 2 seconds.
+    // Simulates a slow response by sleeping for 1 second.
     Meteor._sleepForMs(1000);
     // Fail one third of the time.
     if(Math.random()<.33){

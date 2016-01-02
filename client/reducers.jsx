@@ -40,17 +40,21 @@ Reducers.userInterface = function userInterface(state, action) {
 // using the ES6 default params instead of the manual check like above
 
 Reducers.players = function players(state = [], action) {
+  let docs = [];
   switch (action.type) {
     case 'INCREMENT_SCORE':
       // Optimistic UI update.
       // If the server update fails, this will be reverted.
-      return state.map(player =>
+      // The server update method intentionally fails often.
+      // `state` here is the array of player objects.
+      docs = state.map(player =>
         player._id === action.playerId ?
           Object.assign({}, player, { score: player.score + 5 }) :
           player
       )
+      return docs.sort((a,b) => b.score - a.score);
     case 'PLAYERS_COLLECTION_CHANGED':
-      let docs = _.clone(action.collection);
+      docs = _.clone(action.collection);
       return docs.sort((a,b) => b.score - a.score);
     default:
       return state;

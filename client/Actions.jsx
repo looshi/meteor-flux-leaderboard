@@ -16,7 +16,8 @@ Actions.playersChanged = function playersChanged(newDocs) {
 Actions.incrementScore = function incrementScore(playerId) {
   Meteor.call('players.increment-score', playerId, function(err, res) {
     if(res){
-      store.dispatch(Actions.fetchPlayers());
+      // Fetch the player who changed.
+      store.dispatch(Actions.fetchPlayers(res));
     }
   });
   return {

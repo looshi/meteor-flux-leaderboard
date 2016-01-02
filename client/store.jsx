@@ -31,6 +31,7 @@ DevTools = ReduxDevTools.createDevTools(
     <LogMonitor theme='solarized'/>
   </DockMonitor>
 );
+
 const finalCreateStore = compose(
   // Middleware you want to use in development:
   applyMiddleware(logger),
