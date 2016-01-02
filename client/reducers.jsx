@@ -59,8 +59,25 @@ Reducers.players = function players(state = [], action) {
       )
       return docs.sort((a,b) => b.score - a.score);
     case 'PLAYERS_COLLECTION_CHANGED':
-      docs = _.clone(action.collection);
-      return docs.sort((a,b) => b.score - a.score);
+      // TODO, how to write this better ?
+      // Can we make use of these `update` helper functions :
+      // https://facebook.github.io/react/docs/update.html
+      let players = _.clone(state);
+      action.collection.forEach((newPlayer) => {
+        let oldPlayer = _.findWhere(players, {_id: newPlayer._id});
+        if(oldPlayer){
+          // This is an existing player, update their properties.
+          players.forEach((player, index)=>{
+            if(player._id === oldPlayer._id){
+              players[index] = _.extend(oldPlayer, newPlayer);
+            }
+          });
+        }else{
+          // This is a player who didn't exist before, add them.
+          players.push(newPlayer);
+        }
+      });
+      return players.sort((a,b) => b.score - a.score);
     default:
       return state;
   }

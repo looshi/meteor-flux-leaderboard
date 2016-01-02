@@ -17,9 +17,13 @@ Actions.incrementScore = function incrementScore(playerId, playerName) {
   Meteor.call('players.increment-score', playerId, function(err, res) {
     if(res){
       // Fetch the player who changed.
-      store.dispatch(Actions.fetchPlayers(res));
+      store.dispatch(Actions.fetchPlayers(playerId));
     }else{
       store.dispatch(Actions.playerUpdateFailed(playerId, playerName));
+      // How to revert the client store if this error occurred?
+      // This seems terribly inefficient to go back to the server and get
+      // the correct database value on an update error.
+      store.dispatch(Actions.fetchPlayers(playerId));
     }
   });
   return {
@@ -36,9 +40,11 @@ Actions.playerUpdateFailed = function playerUpdateFailed(playerId, playerName) {
   };
 }
 
-Actions.fetchPlayers = function() {
-  Meteor.call('players.fetch', function(err, res) {
-    store.dispatch(Actions.playersChanged(res));
+Actions.fetchPlayers = function(playerId = {}) {
+  Meteor.call('players.fetch', playerId, function(err, res) {
+    if(res){
+      store.dispatch(Actions.playersChanged(res));
+    }
   });
   return { type: 'FETCH_PLAYERS' };
 };
