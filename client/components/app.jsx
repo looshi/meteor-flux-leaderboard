@@ -1,7 +1,6 @@
 class App extends React.Component {
 
   render() {
-    console.log('[App] rendering');
     return (
       <div className="outer">
         <div className="logo"></div>

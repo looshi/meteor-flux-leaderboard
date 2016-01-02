@@ -1,6 +1,4 @@
-const { createStore, combineReducers, applyMiddleware } = Redux;
-// const { devTools, persistState } = ReduxDevTools;
-// const { DevTools, DebugPanel, LogMonitor } = ReactReduxDevTools;
+const { createStore, combineReducers, applyMiddleware, compose } = Redux;
 
 // Redux has a single store. to reduce complexity it allows you to combine
 // several 'reducer' functions that share this single state object.
@@ -24,21 +22,21 @@ const rootReducer = combineReducers({
   players: Reducers.players,
 });
 
-// const finalCreateStore =
-//   applyMiddleware(logger)(
-//     devTools()(
-//       persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))(
-//         createStore
-//       )
-//     )
-//   );
+// Create and configure the Redux Dev tool component.
+// https://github.com/gaearon/redux-devtools
+DevTools = ReduxDevTools.createDevTools(
+  <DockMonitor
+    toggleVisibilityKey='ctrl-h'
+    changePositionKey='ctrl-q'>
+    <LogMonitor theme='solarized'/>
+  </DockMonitor>
+);
+const finalCreateStore = compose(
+  // Middleware you want to use in development:
+  applyMiddleware(logger),
+  // Required! Enable Redux DevTools with the monitors you chose:
+  DevTools.instrument()
+)(createStore);
 
-// applyMiddleware takes createStore() and returns a new wrapped createStore
-// note, this is an optional step to use middleware (we're auto console.log dispatches)
-// let createStoreWithMiddleware = applyMiddleware(logger)(createStore);
-// store = createStoreWithMiddleware(rootReducer);
-//
-// store = finalCreateStore(rootReducer);
 
-store = createStore(rootReducer);
-console.log('store', store);
+store = finalCreateStore(rootReducer);

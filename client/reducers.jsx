@@ -26,7 +26,6 @@ Reducers.userInterface = function userInterface(state, action) {
 
   switch (action.type) {
     case 'SELECT_PLAYER':
-      console.log('SELECT_PLAYER', action);
       // we happen to be replacing all the reducers state but with merge you
       // could just return the selectedId and it would retain selectedPlayerName
       return merge(state, {
@@ -43,18 +42,14 @@ Reducers.userInterface = function userInterface(state, action) {
 Reducers.players = function players(state = [], action) {
   switch (action.type) {
     case 'INCREMENT_SCORE':
-
-      // Is this optimistic UI update ?
-      // If the server update fails, this should be reverted.
-      console.log('INCREMENT_SCORE', action);
+      // Optimistic UI update.
+      // If the server update fails, this will be reverted.
       return state.map(player =>
         player._id === action.playerId ?
           Object.assign({}, player, { score: player.score + 5 }) :
           player
       )
     case 'PLAYERS_COLLECTION_CHANGED':
-      console.log('PLAYERS_COLLECTION_CHANGED', action);
-
       let docs = _.clone(action.collection);
       return docs.sort((a,b) => b.score - a.score);
     default:

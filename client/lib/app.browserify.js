@@ -1,9 +1,7 @@
 Redux = require("redux");
 ReactRedux = require("react-redux");
 ReduxDevTools = require("redux-devtools");
-//ReactReduxDevTools = require("redux-devtools/lib/react");
 Provider = ReactRedux.Provider;
-// DevTools = ReactReduxDevTools.DevTools;
-// DebugPanel = ReactReduxDevTools.DebugPanel;
-// LogMonitor = require("redux-devtools-log-monitor");
+LogMonitor = require("redux-devtools-log-monitor").default;
+DockMonitor = require("redux-devtools-dock-monitor").default;
 connect = ReactRedux.connect;
