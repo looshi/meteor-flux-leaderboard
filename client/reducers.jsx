@@ -42,43 +42,25 @@ Reducers.userInterface = function userInterface(state, action) {
   }
 }
 
-// using the ES6 default params instead of the manual check like above
-
-Reducers.players = function players(state = [], action) {
-  let docs = [];
-  switch (action.type) {
-    case 'INCREMENT_SCORE':
-      // Optimistic UI update.
-      // If the server update fails, this will be reverted.
-      // The server update method intentionally fails often.
-      // `state` here is the array of player objects.
-      docs = state.map(player =>
-        player._id === action.playerId ?
-          Object.assign({}, player, { score: player.score + 5 }) :
-          player
-      )
-      return docs.sort((a,b) => b.score - a.score);
-    case 'PLAYERS_COLLECTION_CHANGED':
-      // TODO, how to write this better ?
-      // Can we make use of these `update` helper functions :
-      // https://facebook.github.io/react/docs/update.html
-      let players = _.clone(state);
-      action.collection.forEach((newPlayer) => {
-        let oldPlayer = _.findWhere(players, {_id: newPlayer._id});
-        if(oldPlayer){
-          // This is an existing player, update their properties.
-          players.forEach((player, index)=>{
-            if(player._id === oldPlayer._id){
-              players[index] = _.extend(oldPlayer, newPlayer);
-            }
-          });
-        }else{
-          // This is a player who didn't exist before, add them.
-          players.push(newPlayer);
-        }
-      });
-      return players.sort((a,b) => b.score - a.score);
+Reducers.players = function(state = {}, action) {
+  switch(action.type) {
     default:
       return state;
+    case 'INCREMENT_SCORE':
+      let player = state[action.playerId];
+      let inc = Object.assign({}, player, { score: player.score + 5 });
+      return {
+        ...state,
+        [action.playerId]: inc
+      }
+    case 'PLAYERS_CHANGED':
+      const newPlayers = {};
+      action.players.forEach(doc => {
+        newPlayers[doc._id] = doc
+      });
+      return {
+        ...state,
+        ...newPlayers
+      }
   }
 }

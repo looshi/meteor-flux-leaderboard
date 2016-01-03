@@ -1,7 +1,7 @@
 class PlayerList extends React.Component {
 
   render() {
-    if (!this.props.players.length) {
+    if (!this.props.players) {
       return (
         <ul className="leaderboard">
           <h2>Loading...</h2>
@@ -10,16 +10,22 @@ class PlayerList extends React.Component {
       );
     }
 
+    {/*
+      props.players is an object with each key as the _id.
+      Create an array for use in the html, and sort the keys by score.
+    */}
+    let players = Object.keys(this.props.players).sort( (a,b) => {
+      return this.props.players[b].score - this.props.players[a].score;
+    });
     return (
       <ul className="leaderboard">
         {
-          this.props.players.map((player) => {
+          players.map((_id) => {
             return (
               <PlayerItem
-                key={ player._id }
+                key={ _id }
                 selectedPlayerId={ this.props.selectedId }
-                player={ player }
-              />
+                player={ this.props.players[_id] } />
             );
           })
         }
@@ -29,7 +35,7 @@ class PlayerList extends React.Component {
 };
 
 PlayerList.propTypes = {
-  players: React.PropTypes.array.isRequired,
+  players: React.PropTypes.object,
   selectedId: React.PropTypes.string.isRequired
 }
 

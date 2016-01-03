@@ -6,10 +6,10 @@
 Actions = {};
 
 // used when a mongo players collection changes
-Actions.playersChanged = function playersChanged(newDocs) {
+Actions.playersChanged = function playersChanged(newPlayers) {
   return {
-    type: 'PLAYERS_COLLECTION_CHANGED',
-    collection: newDocs
+    type: 'PLAYERS_CHANGED',
+    players: newPlayers
   };
 };
 
@@ -20,9 +20,7 @@ Actions.incrementScore = function incrementScore(playerId, playerName) {
       store.dispatch(Actions.fetchPlayers(playerId));
     }else{
       store.dispatch(Actions.playerUpdateFailed(playerId, playerName));
-      // How to revert the client store if this error occurred?
-      // This seems terribly inefficient to go back to the server and get
-      // the correct database value on an update error.
+      // TODO : handle this client side versus having to fetch again :
       store.dispatch(Actions.fetchPlayers(playerId));
     }
   });

@@ -8,7 +8,9 @@ class App extends React.Component {
         <div className="subtitle">Select a scientist to give them points</div>
         <div className="error">{ this.props.errorMessage }</div>
         <div>
-          <PlayerList { ...this.props } />
+          <PlayerList
+            players = {this.props.players}
+            selectedId = {this.props.selectedId} />
         </div>
 
         <SelectPlayer { ...this.props } />
@@ -18,7 +20,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  players: React.PropTypes.array,
+  players: React.PropTypes.object,
   selectedId: React.PropTypes.string,
   selectedName: React.PropTypes.string,
   errorMessage: React.PropTypes.string
