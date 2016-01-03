@@ -8,14 +8,15 @@ Meteor.methods({
     return Players.find(options).fetch();
   },
 
-  'players.increment-score': function(playerId){
+  'players.update-score': function(playerId){
     // Simulates a slow response by sleeping for 1 second.
     Meteor._sleepForMs(1000);
     // Fail one third of the time.
     if(Math.random()<.33){
       throw new Error('Increment Score Error');
     }
-    return Players.update({_id: playerId}, {$inc: {score: 5}});
+    var _id = Players.update({_id: playerId}, {$inc: {score: 5}});
+    return Players.findOne(_id);
   }
 
 })

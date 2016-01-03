@@ -13,26 +13,35 @@ Actions.playersChanged = function playersChanged(newPlayers) {
   };
 };
 
-Actions.incrementScore = function incrementScore(playerId, playerName) {
-  Meteor.call('players.increment-score', playerId, function(err, res) {
+Actions.updateScore = function updateScore(playerId, playerName) {
+  Meteor.call('players.update-score', playerId, function(err, res) {
     if(res){
-      // Fetch the player who changed.
-      store.dispatch(Actions.fetchPlayers(playerId));
+      // Actions.playersChanged expects an array of players.
+      // This success result is one Player object, add it as a single
+      // item in an array, then dispatch the playersChanged action.
+      let newPlayers = [res];
+      store.dispatch(Actions.playersChanged(newPlayers));
     }else{
-      store.dispatch(Actions.playerUpdateFailed(playerId, playerName));
-      // TODO : handle this client side versus having to fetch again :
-      store.dispatch(Actions.fetchPlayers(playerId));
+      store.dispatch(Actions.updateScoreFailed(playerId, playerName));
     }
   });
   return {
-    type: 'INCREMENT_SCORE',
+    type: 'UPDATE_SCORE',
     playerId: playerId
   };
 };
 
-Actions.playerUpdateFailed = function playerUpdateFailed(playerId, playerName) {
+Actions.updateScoreFailed = function updateScoreFailed(playerId, playerName) {
   return {
-    type: 'PLAYER_UPDATE_FAILED',
+    type: 'UPDATE_SCORE_FAILED',
+    playerId: playerId,
+    playerName: playerName
+  };
+}
+
+Actions.updateScoreSuccess = function updateScoreSuccess(playerId, playerName) {
+  return {
+    type: 'UPDATE_SCORE_SUCCESS',
     playerId: playerId,
     playerName: playerName
   };

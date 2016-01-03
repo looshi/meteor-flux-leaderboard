@@ -8,7 +8,7 @@ class SelectPlayer extends React.Component {
   handleClick() {
     selectedId = this.props.selectedId;
     selectedPlayerName = this.props.selectedPlayerName;
-    store.dispatch(Actions.incrementScore(selectedId, selectedPlayerName));
+    store.dispatch(Actions.updateScore(selectedId, selectedPlayerName));
   }
 
   render() {
