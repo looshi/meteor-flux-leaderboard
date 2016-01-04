@@ -14,36 +14,40 @@ Actions.playersChanged = function playersChanged(newPlayers) {
 };
 
 Actions.updateScore = function updateScore(playerId, playerName) {
-  Meteor.call('players.update-score', playerId, function(err, res) {
+  // Create a unique transaction id.
+  // The server will respond with the transactionId on error or success.
+  let transactionId = Random.id();
+  Meteor.call('players.update-score', playerId, transactionId, (err, res) => {
     if(res){
-      // Actions.playersChanged expects an array of players.
-      // This success result is one Player object, add it as a single
-      // item in an array, then dispatch the playersChanged action.
-      let newPlayers = [res];
-      store.dispatch(Actions.playersChanged(newPlayers));
+      var action = Actions.updateScoreSuccess(playerId, playerName, transactionId);
+      store.dispatch(action);
     }else{
-      store.dispatch(Actions.updateScoreFailed(playerId, playerName));
+      var action = Actions.updateScoreFailed(playerId, playerName, transactionId);
+      store.dispatch(action);
     }
   });
   return {
     type: 'UPDATE_SCORE',
-    playerId: playerId
+    playerId: playerId,
+    transactionId: transactionId
   };
 };
 
-Actions.updateScoreFailed = function updateScoreFailed(playerId, playerName) {
+Actions.updateScoreFailed = function updateScoreFailed(playerId, playerName, transactionId) {
   return {
     type: 'UPDATE_SCORE_FAILED',
     playerId: playerId,
-    playerName: playerName
+    playerName: playerName,
+    transactionId: transactionId
   };
 }
 
-Actions.updateScoreSuccess = function updateScoreSuccess(playerId, playerName) {
+Actions.updateScoreSuccess = function updateScoreSuccess(playerId, playerName, transactionId) {
   return {
     type: 'UPDATE_SCORE_SUCCESS',
     playerId: playerId,
-    playerName: playerName
+    playerName: playerName,
+    transactionId: transactionId
   };
 }
 

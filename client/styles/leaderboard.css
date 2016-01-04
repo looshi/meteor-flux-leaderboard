@@ -149,10 +149,32 @@ body {
   text-align: center;
 }
 
-.error {
+.status{
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.status.ok{
+  color: green;
+}
+
+.status.error {
   color: orange;
   text-align: center;
 }
+
+.saveIcon {
+  vertical-align: middle;
+  width: 100%;
+  margin-left: 20px;
+}
+
+.saveIconSaved{
+  width: 100%;
+  opacity: 0;
+  transition: opacity 2s linear;
+}
+
 
 @media (max-width: 500px) {
   .details, .message {

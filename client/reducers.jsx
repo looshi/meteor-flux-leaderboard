@@ -46,10 +46,6 @@ Reducers.userInterface = function userInterface(state, action) {
         selectedId: action.playerId,
         selectedPlayerName: action.playerName
       });
-    case 'PLAYER_UPDATE_FAILED':
-      return merge(state, {
-        errorMessage: 'Error saving score for ' + action.playerName
-      });
     default:
       return state;
   }
@@ -72,23 +68,52 @@ Reducers.players = function(state = {}, action) {
     default:
       return state;
     case 'UPDATE_SCORE':
-      var player = state[action.playerId];
+      var oldPlayer = state[action.playerId];
+      var oldTransactions = oldPlayer.transactions || [];
+      var newPlayer = {
+        score: oldPlayer.score + 5,
+        transactions: [...oldTransactions, action.transactionId],
+        saveStatus: 'pending'
+      };
       return {
         ...state,
-        [action.playerId]: merge(player, { score: player.score + 5 })
+        [action.playerId]: merge(oldPlayer, newPlayer)
       }
     case 'UPDATE_SCORE_FAILED':
-      // The server method failed.  Revert the UI.
-      var player = state[action.playerId];
+      // The server method failed, revert the increment and remove the pending
+      // transactionId from the player.transactions array.
+      var oldPlayer = state[action.playerId];
+      var newTransactions = _.reject(oldPlayer.transactions, (transactionId) =>{
+        return transactionId === action.transactionId;
+      });
+      var newPlayer = {
+        score: oldPlayer.score - 5,
+        transactions: newTransactions,
+        saveStatus: 'failed'
+      };
       return {
         ...state,
-        [action.playerId]: merge(player, { score: player.score - 5 })
+        [action.playerId]: merge(oldPlayer, newPlayer)
+      }
+    case 'UPDATE_SCORE_SUCCESS':
+      // The server method was succesful! Remove the pending transactionId.
+      var oldPlayer = state[action.playerId];
+      var newTransactions = _.reject(oldPlayer.transactions, (transactionId) =>{
+        return transactionId === action.transactionId;
+      });
+      var newPlayer = {
+        transactions: newTransactions,
+        saveStatus: 'ok'
+      };
+      return {
+        ...state,
+        [action.playerId]: merge(oldPlayer, newPlayer)
       }
     case 'PLAYERS_CHANGED':
       // The remote data has changed.
       const newPlayers = {};
-      action.players.forEach(doc => {
-        newPlayers[doc._id] = doc
+      action.players.forEach(newPlayer => {
+        newPlayers[newPlayer._id] = newPlayer;
       });
       return merge(state, newPlayers);
   }

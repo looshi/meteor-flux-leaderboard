@@ -6,7 +6,6 @@ class App extends React.Component {
         <div className="logo"></div>
         <h1 className="title">Leaderboard</h1>
         <div className="subtitle">Select a scientist to give them points</div>
-        <div className="error">{ this.props.errorMessage }</div>
         <div>
           <PlayerList
             players = {this.props.players}
