@@ -1,9 +1,12 @@
 # meteor-flux-leaderboard
 Flux Example with React &amp; Meteor
 
-## Redux Methods Example
+## Redux Methods/Subscriptions Example
 
 This example demonstrates how to use Redux with server methods, handle server update errors, and display optimistic UI.
+
+This example uses a subscription to handle data change updates which occur
+from other users.  Open two tabs and make changes to view the behavior.
 
 Please read the fantastic Redux guide before/after diving into this. At first it may seem very complex
 but it turns out to be very simple once you understand the reducer flow.

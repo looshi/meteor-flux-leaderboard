@@ -4,12 +4,12 @@
 // with *all* possible ways to mutate the state of the app.
 
 Actions = {};
-
+Players = new Mongo.Collection('players');
 // used when a mongo players collection changes
 Actions.playersChanged = function playersChanged(newPlayers) {
   return {
     type: 'PLAYERS_CHANGED',
-    players: newPlayers
+    players: Players.find().fetch()
   };
 };
 
@@ -19,11 +19,11 @@ Actions.updateScore = function updateScore(playerId, playerName) {
   let transactionId = Random.id();
   Meteor.call('players.update-score', playerId, transactionId, (err, res) => {
     if(res){
-      var action = Actions.updateScoreSuccess(playerId, playerName, transactionId);
-      store.dispatch(action);
+      // var action = Actions.updateScoreSuccess(playerId, playerName, transactionId);
+      // store.dispatch(action);
     }else{
-      var action = Actions.updateScoreFailed(playerId, playerName, transactionId);
-      store.dispatch(action);
+      // var action = Actions.updateScoreFailed(playerId, playerName, transactionId);
+      // store.dispatch(action);
     }
   });
   return {
@@ -52,11 +52,20 @@ Actions.updateScoreSuccess = function updateScoreSuccess(playerId, playerName, t
 }
 
 Actions.fetchPlayers = function(playerId = {}) {
-  Meteor.call('players.fetch', playerId, function(err, res) {
-    if(res){
-      store.dispatch(Actions.playersChanged(res));
+  let sub = Meteor.subscribe('players');
+  let cursor = Players.find({});
+  cursor.observe({
+    added: function(doc){
+      store.dispatch(Actions.playersChanged());
+    },
+    removed: function(){
+      store.dispatch(Actions.playersChanged());
+    },
+    changed: function(){
+      store.dispatch(Actions.playersChanged());
     }
   });
+
   return { type: 'FETCH_PLAYERS' };
 };
 

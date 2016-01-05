@@ -1,6 +1,6 @@
 /*global alt:true */
 console.log("Starting Leaderboard Server...");
-
+Players = new Mongo.Collection("players");
 // run fixtures if db is empty
 Meteor.startup(function () {
   if (Players.find().count() === 0) {
